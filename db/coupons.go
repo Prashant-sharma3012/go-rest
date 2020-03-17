@@ -21,7 +21,6 @@ var collection *CouponsCollection
 func GetCouponsInstance() *CouponsCollection {
 	if collection == nil {
 		collection = &CouponsCollection{}
-		return collection
 	}
 
 	return collection
