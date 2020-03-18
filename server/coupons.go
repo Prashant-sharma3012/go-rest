@@ -14,6 +14,8 @@ func (s *Server) ListCoupons(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println(err)
+		w.Write([]byte(err.Error()))
+		return
 	}
 
 	w.Write(coupons)
@@ -38,7 +40,8 @@ func (s *Server) DeleteCoupon(w http.ResponseWriter, r *http.Request) {
 
 	err, _ := s.DB.Coupons.Delete(couponId)
 	if err != nil {
-		w.Write([]byte("An Error Occured"))
+		w.Write([]byte(err.Error()))
+		return
 	}
 
 	w.Write([]byte("Coupon deleted"))
