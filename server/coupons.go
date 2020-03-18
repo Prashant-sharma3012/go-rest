@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-rest/models"
+	"github.com/gorilla/mux"
 )
 
 func (s *Server) ListCoupons(w http.ResponseWriter, r *http.Request) {
@@ -48,5 +49,15 @@ func (s *Server) DeleteCoupon(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetCouponByCode(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from get coupon by code"))
+	couponCode := mux.Vars(r)["couponCode"]
+
+	err, coupon := s.DB.Coupons.FindByCode(couponCode)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	res, _ := json.Marshal(coupon)
+
+	w.Write(res)
 }
