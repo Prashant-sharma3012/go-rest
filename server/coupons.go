@@ -1,13 +1,31 @@
 package server
 
-import "net/http"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/go-rest/models"
+)
 
 func (s *Server) ListCoupons(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from coupon list"))
+	coupons, err := json.Marshal(s.DB.Coupons.List())
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	w.Write(coupons)
 }
 
 func (s *Server) AddCoupon(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from add coupon"))
+
+	coupon := models.CouponFromJson(r.Body)
+	coupon.Id = s.DB.Coupons.NextId()
+
+	success := s.DB.Coupons.Create(*coupon)
+
+	w.Write([]byte(success))
 }
 
 func (s *Server) UpdateCoupon(w http.ResponseWriter, r *http.Request) {

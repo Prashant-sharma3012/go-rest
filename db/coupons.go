@@ -2,17 +2,12 @@ package db
 
 import (
 	"errors"
-	"time"
+
+	"github.com/go-rest/models"
 )
 
-type Coupon struct {
-	Id     int
-	Code   string
-	Expiry time.Time
-}
-
 type CouponsCollection struct {
-	Coupons []Coupon
+	Coupons []models.Coupon
 }
 
 var collection *CouponsCollection
@@ -27,23 +22,19 @@ func GetCouponsInstance() *CouponsCollection {
 }
 
 func (c *CouponsCollection) NextId() int {
-	return len(c.Coupons)
+	return len(c.Coupons) + 1
 }
 
-func (c *CouponsCollection) Create(couponCode string) string {
-	currLen := len(c.Coupons)
+func (c *CouponsCollection) List() []models.Coupon {
+	return c.Coupons
+}
 
-	coupon := Coupon{
-		Id:     currLen,
-		Code:   couponCode,
-		Expiry: time.Now(),
-	}
-
+func (c *CouponsCollection) Create(coupon models.Coupon) string {
 	c.Coupons = append(c.Coupons, coupon)
 	return "coupon added successfully"
 }
 
-func (c *CouponsCollection) Update(coupon Coupon) (error, string) {
+func (c *CouponsCollection) Update(coupon models.Coupon) (error, string) {
 	found := false
 
 	for indx, value := range c.Coupons {
@@ -61,7 +52,7 @@ func (c *CouponsCollection) Update(coupon Coupon) (error, string) {
 	return errors.New("Not Found"), ""
 }
 
-func (c *CouponsCollection) FindByCode(couponCode string) (error, Coupon) {
+func (c *CouponsCollection) FindByCode(couponCode string) (error, models.Coupon) {
 
 	for _, value := range c.Coupons {
 		if value.Code == couponCode {
@@ -69,7 +60,7 @@ func (c *CouponsCollection) FindByCode(couponCode string) (error, Coupon) {
 		}
 	}
 
-	return errors.New("Not Found"), Coupon{}
+	return errors.New("Not Found"), models.Coupon{}
 }
 
 func (c *CouponsCollection) Delete(couponCode string) (error, string) {
