@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-rest/models"
 )
@@ -33,7 +34,14 @@ func (s *Server) UpdateCoupon(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteCoupon(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from coupon delete"))
+	couponId, _ := strconv.Atoi(r.FormValue("couponId"))
+
+	err, _ := s.DB.Coupons.Delete(couponId)
+	if err != nil {
+		w.Write([]byte("An Error Occured"))
+	}
+
+	w.Write([]byte("Coupon deleted"))
 }
 
 func (s *Server) GetCouponByCode(w http.ResponseWriter, r *http.Request) {

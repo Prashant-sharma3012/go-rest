@@ -63,11 +63,11 @@ func (c *CouponsCollection) FindByCode(couponCode string) (error, models.Coupon)
 	return errors.New("Not Found"), models.Coupon{}
 }
 
-func (c *CouponsCollection) Delete(couponCode string) (error, string) {
+func (c *CouponsCollection) Delete(couponId int) (error, string) {
 	removeIndx := -1
 
 	for indx, value := range c.Coupons {
-		if value.Code == couponCode {
+		if value.Id == couponId {
 			removeIndx = indx
 			break
 		}
