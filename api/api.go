@@ -3,20 +3,28 @@ package api
 import (
 	"net/http"
 
+	"github.com/go-rest/server"
 	"github.com/gorilla/mux"
 )
 
 type Api struct {
-	Handler *mux.Router
+	Srv     *server.Server
+	Root    *mux.Router
+	Coupons *mux.Router
 }
 
-func InitRoutes() *Api {
-	r := mux.NewRouter()
-	r.HandleFunc("/", MockHandler).Methods("Get")
+var API *Api
 
-	return &Api{
-		Handler: r,
+func InitRoutes(s *server.Server) {
+	root := s.Handler.PathPrefix("/").Subrouter()
+
+	API = &Api{
+		Srv:  s,
+		Root: root,
 	}
+
+	API.InitCouponRoutes()
+	API.Root.HandleFunc("/", MockHandler)
 }
 
 func MockHandler(w http.ResponseWriter, r *http.Request) {
