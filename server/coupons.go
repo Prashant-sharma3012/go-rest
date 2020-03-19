@@ -32,10 +32,6 @@ func (s *Server) AddCoupon(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(success))
 }
 
-func (s *Server) UpdateCoupon(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from update coupon"))
-}
-
 func (s *Server) DeleteCoupon(w http.ResponseWriter, r *http.Request) {
 	couponId, _ := strconv.Atoi(r.FormValue("couponId"))
 

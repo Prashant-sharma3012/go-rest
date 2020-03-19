@@ -8,9 +8,12 @@ import (
 )
 
 type Api struct {
-	Srv     *server.Server
-	Root    *mux.Router
-	Coupons *mux.Router
+	Srv       *server.Server
+	Root      *mux.Router
+	Coupons   *mux.Router
+	Items     *mux.Router
+	Employees *mux.Router
+	Sales     *mux.Router
 }
 
 var API *Api
@@ -24,6 +27,9 @@ func InitRoutes(s *server.Server) {
 	}
 
 	API.InitCouponRoutes()
+	API.InitInventoryRoutes()
+	API.InitEmployeeRoutes()
+	API.InitSalesRoutes()
 	API.Root.HandleFunc("/", MockHandler)
 }
 
