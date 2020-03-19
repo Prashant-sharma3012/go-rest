@@ -21,6 +21,37 @@ func GetInventoryInstance() *InventoryCollection {
 	return invCol
 }
 
+func (i *InventoryCollection) itemQtyAvailable(item models.Item) bool {
+
+	for _, value := range i.Inventory {
+		if value.Id == item.Id && value.Quantity > item.Quantity {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (i *InventoryCollection) ItemsQtyAvailable(items []models.Item) (bool, models.Item) {
+
+	for _, value := range items {
+		if !i.itemQtyAvailable(value) {
+			return false, value
+		}
+	}
+
+	return true, models.Item{}
+}
+
+func (i *InventoryCollection) UpdateInventory(items []models.Item) error {
+
+	for _, value := range items {
+		i.Update(value)
+	}
+
+	return nil
+}
+
 func (i *InventoryCollection) NextId() int {
 	return len(i.Inventory) + 1
 }

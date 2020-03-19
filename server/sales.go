@@ -18,9 +18,18 @@ func (s *Server) listSales(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) MakeSale(w http.ResponseWriter, r *http.Request) {
 	sale := models.SaleFromJson(r.Body)
-	// check if items are present in inventory and reduce teh quantity
+
+	isAvailable, insufficientItem := s.DB.Inventory.ItemsQtyAvailable(sale.Items)
+	if !isAvailable {
+		w.Write([]byte("Folowwing Item doesnt have enough qty \n"))
+		itm, _ := json.Marshal(insufficientItem)
+		w.Write(itm)
+		return
+	}
 
 	success := s.DB.Sales.Create(*sale)
+	s.DB.Inventory.UpdateInventory(sale.Items)
+
 	w.Write([]byte(success))
 }
 
